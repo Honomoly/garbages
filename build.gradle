@@ -19,8 +19,35 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	// testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Infra
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.5'
+	implementation 'org.springframework.boot:spring-boot-starter-aop:3.4.5'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.5'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.4.5'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok:1.18.38'
+	annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+	// DB
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+
+	// Request
+	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+	implementation 'com.google.code.gson:gson:2.13.1'
+
+	// .env
+	implementation 'io.github.cdimascio:dotenv-java:3.1.0'
 }
 
 tasks.named('test') {

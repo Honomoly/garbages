@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.honomoly.garbages.mapper.UserMapper">
+
+    <!-- 공통 파트 -->
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `users` (`identifier`, `nickname`, `hash_salt`, `password_hash`)
+        VALUES (#{identifier}, #{nickname}, #{hashSalt}, #{passwordHash})
+    </insert>
+
+    <select id="selectById">
+        SELECT *
+        FROM users
+        WHERE id = #{id} AND is_active
+    </select>
+
+    <select id="select">
+        SELECT *
+        FROM users
+        WHERE id &lt; #{start}
+        LIMIT #{limit}
+        ORDER BY id DESC
+    </select>
+
+    <update id="update">
+        UPDATE users
+        <set>
+            <if test="identifier != null">identifier = #{identifier},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="passwordHash != null">password_hash = #{passwordHash},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        UPDATE users
+        SET is_active = FALSE
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 커스텀 파트 -->
+
+    <select id="selectByIdentifier">
+        SELECT *
+        FROM users
+        WHERE identifier = #{identifier} AND is_active
+    </select>
+
+</mapper>
