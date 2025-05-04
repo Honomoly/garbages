@@ -6,7 +6,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `chats` (`users_id`, `message`)
-        VALUES (#{users_id}, #{message})
+        VALUES (#{usersId}, #{message})
     </insert>
 
     <select id="selectById">
@@ -40,7 +40,7 @@
     <select id="selectByUsersId">
         SELECT *
         FROM `chats`
-        WHERE `users_id` = #{users_id} AND `status` = 1
+        WHERE `users_id` = #{usersId} AND `status` = 1
     </select>
 
 </mapper>

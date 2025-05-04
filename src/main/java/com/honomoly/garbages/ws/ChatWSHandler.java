@@ -56,7 +56,13 @@ public class ChatWSHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
+        UserEntity user = (UserEntity) session.getAttributes().get("user");
+        try {
+            chatService.sendMessage(message.getPayload(), user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.close(CloseStatus.SERVER_ERROR);
+        }
     }
 
 }
