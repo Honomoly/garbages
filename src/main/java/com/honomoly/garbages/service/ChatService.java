@@ -1,29 +1,36 @@
 package com.honomoly.garbages.service;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 @Service
 public class ChatService {
 
-    private static final Map<String, Long> currentUsers = new ConcurrentHashMap<>();
+    private static final Map<Long, WebSocketSession> connectedUsers = new ConcurrentHashMap<>();
 
     /**
      * 유저 등록
      * @param username
-     * @return 성공시 null, 실패시 이미 등록된 유저의 마지막 로그인 시간 반환
+     * @return
      */
-    public static Long registerUser(String username) {
-        return currentUsers.putIfAbsent(username, System.currentTimeMillis());
+    public static WebSocketSession registerUser(long usersId, WebSocketSession session) throws IOException {
+        return connectedUsers.putIfAbsent(usersId, session);
     }
 
-    public static void removeUser(String username) {
-        currentUsers.remove(username);
+    public static boolean isAlreadyConnected(long usersId) {
+        return connectedUsers.containsKey(usersId);
     }
 
-    public static Long getLastLogin(String username) {
-        return currentUsers.get(username);
+    public static void removeUser(long usersId, String sessionId) throws IOException {
+        connectedUsers.computeIfPresent(usersId, (k, v) -> {
+            if (v.getId().equals(sessionId))
+                return null; // 동일 세션이면 제거
+            return v; // 아니면 유지
+        });
     }
+
 }

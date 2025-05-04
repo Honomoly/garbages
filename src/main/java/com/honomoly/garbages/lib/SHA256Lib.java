@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA256Tool {
+public class SHA256Lib {
 
     /**
      * 매 실행시에 새로운 다이제스트 객체 생성
@@ -31,16 +31,21 @@ public class SHA256Tool {
         return digest.digest(input.getBytes());
     }
 
-    private static final int RANDOM_CODE_LENGTH = 8;
+
+	// SHA-256이 생성할 수 있는 Base62 규격은 최대 약 43자리
+    private static final int RANDOM_CODE_MAX_LENGTH = 43;
 	private static final BigInteger MODULO = BigInteger.valueOf(62);
 	private static final String BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     /**
-	 * 특정 입력을 받아 랜덤한 8자리 문자열을 생성, Base62 인코딩 기반
+	 * 특정 입력을 받아 랜덤한 문자열을 생성, Base62 인코딩 기반
 	 * @param input : 시드가 되는 입력
-	 * @return randomCode : 8자리의 경우 약 218조개의 가짓수가 가능
+	 * @return Random Code
 	 */
-	public static String generateRandomCode() {
+	public static String generateRandomCode(int randomCodeLength) {
+
+		if (randomCodeLength < 1 || randomCodeLength > RANDOM_CODE_MAX_LENGTH)
+			randomCodeLength = RANDOM_CODE_MAX_LENGTH;
 
         MessageDigest digest = getSHA256Digest();
 
@@ -52,13 +57,18 @@ public class SHA256Tool {
 		// div, mod 기법을 통한 랜덤값 추출
 		StringBuilder sb = new StringBuilder();
 
-		while (sb.length() < RANDOM_CODE_LENGTH) {
+		while (sb.length() < randomCodeLength) {
 			BigInteger[] divMod = num.divideAndRemainder(MODULO);
 			sb.append(BASE62.charAt(divMod[1].intValue()));
 			num = divMod[0];
 		}
 
 		return sb.toString();
+	}
+
+	/** 아무 입력이 없으면 기본 77자리가 생성 */
+	public static String generateRandomCode() {
+		return generateRandomCode(0);
 	}
 
 }

@@ -14,11 +14,14 @@ import com.honomoly.garbages.ws.ChatWSHandler;
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
+    private ChatWSHandler chatWSHandler;
+
+    @Autowired
     private BaseHandshakeInterceptor baseHandshakeInterceptor;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ChatWSHandler(), "/ws")
+        registry.addHandler(chatWSHandler, "/ws/chat")
                 .setAllowedOrigins("*")
                 .addInterceptors(baseHandshakeInterceptor);
     }

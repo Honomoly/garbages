@@ -33,6 +33,5 @@ public class AuthController {
     public UserDto signIn(@RequestBody @Valid SignInRequest request) {
         return authService.signIn(request);
     }
-    
 
 }

@@ -13,11 +13,26 @@ import lombok.Setter;
 public abstract class AbstractEntity {
 
     private Long id;
+    private Byte status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     public void copyFrom(Object other) {
         BeanUtils.copyProperties(other, this);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != null)
+            return id.intValue();
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractEntity ett)
+            return ett.getClass() == this.getClass() && ett.getId() != null && ett.getId().equals(this.id);
+        return false;
     }
 
 }

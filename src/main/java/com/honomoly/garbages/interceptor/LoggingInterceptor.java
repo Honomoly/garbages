@@ -14,7 +14,6 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     // 요청 처리시간을 계산하기 위한 필드
     private static final ThreadLocal<Long> startTime = new ThreadLocal<>();
-    private static final ThreadLocal<Boolean> errorRequest = new ThreadLocal<>();
 
     // 메소드명은 노란색으로 강조하도록 설정
     private static final String LOGGING_FORMAT = coloring("33", "[%s]") + " %s %s (%dms)";
@@ -38,22 +37,15 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
-        boolean isErrorRequest = "/error".equals(req.getRequestURI());
-        errorRequest.set(isErrorRequest);
-        if (!isErrorRequest) startTime.set(System.currentTimeMillis());
+        startTime.set(System.currentTimeMillis());
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception e) {
-
-        boolean isErrorRequest = errorRequest.get();
-        errorRequest.remove();
-
-        if (isErrorRequest) return;
-
         int httpStatusCode = res.getStatus();
         HttpStatus httpStatus;
+
         try {
             httpStatus = HttpStatus.valueOf(httpStatusCode);
         } catch (IllegalArgumentException _e) {
